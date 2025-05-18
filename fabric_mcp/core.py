@@ -22,19 +22,40 @@ class FabricMCP(FastMCP[None]):
 
         @self.tool()
         def fabric_list_patterns() -> list[str]:
-            """Return a list of available fabric patterns."""
-            # This is a placeholder for the actual implementation
-            return ["pattern1", "pattern2", "pattern3"]
+            """Return a list of available fabric patterns from the Fabric backend."""
+            try:
+                from fabric_mcp.api_client import FabricApiClient
+                client = FabricApiClient()
+                resp = client.get("/patterns/names")
+                patterns = resp.json()
+                if not isinstance(patterns, list):
+                    self.logger.error("Unexpected response type for /patterns/names: %s", type(patterns))
+                    return []
+                return patterns
+            except Exception as e:
+                self.logger.error(f"Failed to fetch pattern list from Fabric backend: {e}")
+                return []
 
         self.__tools.append(fabric_list_patterns)
 
         @self.tool()
-        def fabric_pattern_details(pattern_name: str) -> dict[Any, Any]:
-            """Return the details of a specific fabric pattern."""
-            # This is a placeholder for the actual implementation
-            return {"name": pattern_name, "details": "Pattern details here"}
+        def fabric_pattern_prompt(pattern_name: str) -> dict[Any, Any]:
+            """Return the prompt of a specific fabric pattern."""
+            try:
+                from fabric_mcp.api_client import FabricApiClient
+                client = FabricApiClient()
+                resp = client.get(f"/patterns/{pattern_name}")
+                data = resp.json()
+                pattern_text = data.get("Pattern", "")
+                return {
+                    "name": data.get("Name", pattern_name),
+                    "pattern": pattern_text,
+                }
+            except Exception as e:
+                self.logger.error(f"Failed to fetch pattern prompt from Fabric backend: {e}")
+                return {"name": pattern_name, "pattern": ""}
 
-        self.__tools.append(fabric_pattern_details)
+        self.__tools.append(fabric_pattern_prompt)
 
         @self.tool()
         def fabric_run_pattern(pattern_name: str, input_str: str) -> dict[Any, Any]:
