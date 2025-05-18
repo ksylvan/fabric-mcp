@@ -4,7 +4,7 @@
 
 Fabric is an open-source AI framework focused on prompt engineering and modular AI workflows. It lets you define, organize, and run “patterns” (specialized prompts and workflows) for tasks like code explanation, summarization, creative writing, and more.
 
-- Patterns are stored as Markdown files (see `/home/gaem/fabric/configs/patterns/`).
+- Patterns are stored as Markdown files (see `/home/user/.config/fabric/patterns`).
 - Fabric can be run as a REST API server with `fabric --serve`.
 
 ## What is the Fabric MCP Server?
@@ -29,10 +29,21 @@ The Fabric MCP Server bridges Fabric’s REST API to any Model Context Protocol 
    (Default REST API at http://127.0.0.1:8080)
 
 2. **Start Fabric MCP Server:**
-   ```bash
-   /home/gaem/fabric/fabric-mcp/.venv/bin/fabric-mcp --stdio
+   - Make sure your LLM/AI Tool is setup correctly
+   - For example in Windsurf your mcp_config.json sould contain
+   ```json
+      },
+    "ksylvan/fabric-mcp": {
+      "command": "/path/to/fabric-mcp/.venv/bin/fabric-mcp",
+      "args": [
+        "--stdio"
+      ],
+      "env": {
+        "FABRIC_BASE_URL": "http://127.0.0.1:8080"
+      },
+      "disabled": false
+    }
    ```
-   (Configured via `/home/gaem/.codeium/windsurf-next/mcp_config.json`)
 
 3. **MCP Client/LLM Usage:**
    - Discover available tools via MCP.
@@ -56,11 +67,4 @@ A pattern prompt (e.g., `ai`) starts with:
 - `FABRIC_API_KEY` (if required by backend)
 - `FABRIC_MCP_LOG_LEVEL` (optional)
 
-## Directory Structure
-
-- `/home/gaem/fabric/configs/patterns/` — All pattern definitions (Markdown).
-- `/home/gaem/fabric/fabric-mcp/` — MCP server source and config.
-
 ---
-
-Let me know if you want a more detailed or more concise version, or if you want to include usage examples!
