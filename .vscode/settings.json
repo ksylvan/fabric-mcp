@@ -12,7 +12,7 @@
 	"python.testing.pytestEnabled": true,
 	"markdownlint.config": {
 		"MD033": {
-			"allowed_elements": ["br", "div", "img"]
+			"allowed_elements": ["a", "br", "div", "img"]
 		}
 	}
 }
