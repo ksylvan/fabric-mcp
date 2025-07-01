@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/ksylvan-fabric-mcp-badge.png)](https://mseep.ai/app/ksylvan-fabric-mcp)
+
 # Fabric MCP Server
 
 [![License: MIT][mit_license]][mit_license_link]
