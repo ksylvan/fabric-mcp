@@ -71,20 +71,6 @@ The core architecture and proposed tools are outlined in the [High-Level Archite
 
 You can also use [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ksylvan/fabric-mcp) to explore the source code.
 
-```bash
-# you can also use pnpm if you prefer
-npm install -g task-master-ai
-```
-
-And occasionally you should upgrade it:
-
-```bash
-# or use "pnpm upgrade -g task-master-ai"
-npm upgrade -g task-master-ai
-```
-
-Read the Task Master docs for how to set up your `.env` file with the appropriate API keys.
-
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
