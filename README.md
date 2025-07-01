@@ -3,12 +3,15 @@
 [![License: MIT][mit_license]][mit_license_link]
 [![image](https://img.shields.io/pypi/v/fabric-mcp.svg)](https://pypi.python.org/pypi/fabric-mcp)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ksylvan/fabric-mcp)
+[![Verified on MseeP](https://mseep.ai/badge.svg)](https://mseep.ai/app/fca21713-c65c-42ee-b8fa-ce209466e70a)
+
+<div align="center">
+<a href="https://mseep.ai/app/ksylvan-fabric-mcp"><img src="https://mseep.net/pr/ksylvan-fabric-mcp-badge.png" alt="MseeP.ai Security Assessment Badge" width="20%"></a>
 
 | main  |   |  | develop  |   |
 |:---:|:---:|:---:|:---:|:---:|
 | [![Main Tests][main_tests]][main_tests_link] | [![Main Publish][main_publish]][main_publish_link] |  | [![Develop Tests][develop_tests]][develop_tests_link] | [![Develop Publish][develop_publish]][develop_publish_link] |
 
-<div align="center">
 <img src="https://github.com/ksylvan/fabric-mcp/blob/main/docs/logo.png?raw=true" alt="fabric-mcp logo" width="150" height="150">
 </div>
 
@@ -67,20 +70,6 @@ The project was completed by using the [BMAD-METHOD (Breakthrough Method of Agil
 The core architecture and proposed tools are outlined in the [High-Level Architecture Document][architecture_doc].
 
 You can also use [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ksylvan/fabric-mcp) to explore the source code.
-
-```bash
-# you can also use pnpm if you prefer
-npm install -g task-master-ai
-```
-
-And occasionally you should upgrade it:
-
-```bash
-# or use "pnpm upgrade -g task-master-ai"
-npm upgrade -g task-master-ai
-```
-
-Read the Task Master docs for how to set up your `.env` file with the appropriate API keys.
 
 ## Getting Started
 
