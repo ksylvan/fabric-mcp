@@ -16,7 +16,7 @@ import pytest
 from fastmcp import Client
 from fastmcp.client.transports import StreamableHttpTransport
 from fastmcp.exceptions import ToolError
-from fastmcp.utilities.types import ContentBlock
+from mcp.types import ContentBlock
 
 from tests.shared.fabric_api.server import MOCK_PATTERNS
 from tests.shared.fabric_api.utils import (

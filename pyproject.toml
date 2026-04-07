@@ -77,7 +77,6 @@ typeCheckingMode = "strict"
 reportMissingTypeStubs = true
 reportUnknownParameterType = true
 reportUnknownMemberType = true
-reportAny = true
 
 [tool.hatch.build]
 # ensure editable installs pick up code under src/
