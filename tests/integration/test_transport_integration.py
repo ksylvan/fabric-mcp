@@ -442,6 +442,7 @@ class TransportTestBase:
                     },
                 )
                 assert result_basic is not None
+                assert not result_basic.is_error
                 output_text_basic = getattr(result_basic.content[0], "text")
                 assert len(output_text_basic) > 0
 
@@ -455,6 +456,7 @@ class TransportTestBase:
                     },
                 )
                 assert result_stream is not None
+                assert not result_stream.is_error
                 output_text_stream = getattr(result_stream.content[0], "text")
                 assert len(output_text_stream) > 0
 
