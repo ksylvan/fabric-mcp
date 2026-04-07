@@ -143,7 +143,8 @@ class TestFabricRunPatternModelInference(TestFabricRunPatternFixtureBase):
         self, server_no_defaults: FabricMCP
     ) -> Callable[..., Any]:
         """Get the fabric_run_pattern tool from server with no defaults."""
-        tools = await server_no_defaults.get_tools()
+        tools_list = await server_no_defaults.list_tools()
+        tools = {t.name: t for t in tools_list}
         return getattr(tools["fabric_run_pattern"], "fn")
 
     @pytest_asyncio.fixture
@@ -151,7 +152,8 @@ class TestFabricRunPatternModelInference(TestFabricRunPatternFixtureBase):
         self, server_claude_model: FabricMCP
     ) -> Callable[..., Any]:
         """Get the fabric_run_pattern tool from server with Claude model."""
-        tools = await server_claude_model.get_tools()
+        tools_list = await server_claude_model.list_tools()
+        tools = {t.name: t for t in tools_list}
         return getattr(tools["fabric_run_pattern"], "fn")
 
     @pytest_asyncio.fixture
@@ -159,7 +161,8 @@ class TestFabricRunPatternModelInference(TestFabricRunPatternFixtureBase):
         self, server_gpt_model: FabricMCP
     ) -> Callable[..., Any]:
         """Get the fabric_run_pattern tool from server with GPT model."""
-        tools = await server_gpt_model.get_tools()
+        tools_list = await server_gpt_model.list_tools()
+        tools = {t.name: t for t in tools_list}
         return getattr(tools["fabric_run_pattern"], "fn")
 
     def test_pattern_not_found_500_error(

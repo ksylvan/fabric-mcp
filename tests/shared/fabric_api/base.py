@@ -17,4 +17,5 @@ class TestFixturesBase:
     @pytest_asyncio.fixture
     async def mcp_tools(self, server: FabricMCP):
         """Get the MCP tools from the server."""
-        return await server.get_tools()
+        tools = await server.list_tools()
+        return {t.name: t for t in tools}
