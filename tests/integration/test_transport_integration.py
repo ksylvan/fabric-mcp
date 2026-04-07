@@ -280,7 +280,9 @@ class TransportTestBase:
                 self._validate_pattern_run_result(result_analytical.content)
                 output_text_analytical = getattr(result_analytical.content[0], "text")
                 assert isinstance(output_text_analytical, str)
-                output_text_analytical: str = getattr(result_analytical.content[0], "text")
+                output_text_analytical: str = getattr(
+                    result_analytical.content[0], "text"
+                )
                 assert (
                     "analytical" in output_text_analytical.lower()
                     or "Analytical strategy applied" in output_text_analytical
