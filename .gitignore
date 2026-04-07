@@ -344,3 +344,6 @@ pnpm-lock.yaml
 .ai
 .opencode
 OpenCode.md
+
+# Maestro files
+.maestro

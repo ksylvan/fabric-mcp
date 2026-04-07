@@ -16,7 +16,7 @@ import pytest
 from fastmcp import Client
 from fastmcp.client.transports import StreamableHttpTransport
 from fastmcp.exceptions import ToolError
-from fastmcp.utilities.types import MCPContent
+from mcp.types import ContentBlock
 
 from tests.shared.fabric_api.server import MOCK_PATTERNS
 from tests.shared.fabric_api.utils import (
@@ -149,9 +149,9 @@ class TransportTestBase:
                 error_msg = str(exc_info.value)
                 assert "Failed to connect to Fabric API" in error_msg
 
-    def _validate_pattern_run_result(self, result: Sequence[MCPContent]) -> None:
+    def _validate_pattern_run_result(self, result: Sequence[ContentBlock]) -> None:
         """Helper to validate pattern run result structure."""
-        assert isinstance(result, list)
+        assert isinstance(result, list)  # type: ignore[arg-type]
         assert len(result) > 0
         assert hasattr(result[0], "text")
         assert isinstance(getattr(result[0], "text"), str)
@@ -177,8 +177,8 @@ class TransportTestBase:
                     },
                 )
                 assert result is not None
-                assert isinstance(result, list)
-                self._validate_pattern_run_result(result)
+                assert not result.is_error
+                self._validate_pattern_run_result(result.content)
 
     @pytest.mark.asyncio
     async def test_fabric_run_pattern_streaming_tool(
@@ -200,10 +200,10 @@ class TransportTestBase:
                     },
                 )
                 assert result is not None
-                assert isinstance(result, list)
+                assert not result.is_error
 
-                assert len(result) > 0
-                self._validate_pattern_run_result(result)
+                assert len(result.content) > 0
+                self._validate_pattern_run_result(result.content)
 
     @pytest.mark.asyncio
     async def test_fabric_run_pattern_with_model_name(
@@ -225,8 +225,8 @@ class TransportTestBase:
                         "model_name": "gpt-4",
                     },
                 )
-                self._validate_pattern_run_result(result_gpt4)
-                output_text_gpt4 = getattr(result_gpt4[0], "text")
+                self._validate_pattern_run_result(result_gpt4.content)
+                output_text_gpt4 = getattr(result_gpt4.content[0], "text")
                 assert "gpt-4" in output_text_gpt4 or "openai" in output_text_gpt4
 
                 result_claude = await client.call_tool(
@@ -237,8 +237,8 @@ class TransportTestBase:
                         "model_name": "claude-3-opus",
                     },
                 )
-                self._validate_pattern_run_result(result_claude)
-                output_text_claude = getattr(result_claude[0], "text")
+                self._validate_pattern_run_result(result_claude.content)
+                output_text_claude = getattr(result_claude.content[0], "text")
                 assert "claude-3-opus" in output_text_claude
 
     @pytest.mark.asyncio
@@ -261,8 +261,8 @@ class TransportTestBase:
                         "strategy_name": "creative",
                     },
                 )
-                self._validate_pattern_run_result(result_creative)
-                output_text_creative = getattr(result_creative[0], "text")
+                self._validate_pattern_run_result(result_creative.content)
+                output_text_creative = getattr(result_creative.content[0], "text")
                 assert isinstance(output_text_creative, str)
                 assert (
                     "creative" in output_text_creative.lower()
@@ -277,10 +277,12 @@ class TransportTestBase:
                         "strategy_name": "analytical",
                     },
                 )
-                self._validate_pattern_run_result(result_analytical)
-                output_text_analytical = getattr(result_analytical[0], "text")
+                self._validate_pattern_run_result(result_analytical.content)
+                output_text_analytical = getattr(result_analytical.content[0], "text")
                 assert isinstance(output_text_analytical, str)
-                output_text_analytical: str = getattr(result_analytical[0], "text")
+                output_text_analytical: str = getattr(
+                    result_analytical.content[0], "text"
+                )
                 assert (
                     "analytical" in output_text_analytical.lower()
                     or "Analytical strategy applied" in output_text_analytical
@@ -306,8 +308,8 @@ class TransportTestBase:
                         "temperature": 1.5,
                     },
                 )
-                self._validate_pattern_run_result(result_temp)
-                output_text_temp = getattr(result_temp[0], "text")
+                self._validate_pattern_run_result(result_temp.content)
+                output_text_temp = getattr(result_temp.content[0], "text")
                 assert "temp=1.5" in output_text_temp
 
                 # Test with top_p parameter
@@ -319,8 +321,8 @@ class TransportTestBase:
                         "top_p": 0.8,
                     },
                 )
-                self._validate_pattern_run_result(result_top_p)
-                output_text_top_p = getattr(result_top_p[0], "text")
+                self._validate_pattern_run_result(result_top_p.content)
+                output_text_top_p = getattr(result_top_p.content[0], "text")
                 assert "top_p=0.8" in output_text_top_p
 
     @pytest.mark.asyncio
@@ -349,8 +351,8 @@ class TransportTestBase:
                     },
                 )
 
-                self._validate_pattern_run_result(result)
-                output_text = getattr(result[0], "text")
+                self._validate_pattern_run_result(result.content)
+                output_text = getattr(result.content[0], "text")
 
                 # Verify multiple parameters are reflected in output
                 assert "gpt-4" in output_text
@@ -440,7 +442,8 @@ class TransportTestBase:
                     },
                 )
                 assert result_basic is not None
-                output_text_basic = getattr(result_basic[0], "text")
+                assert not result_basic.is_error
+                output_text_basic = getattr(result_basic.content[0], "text")
                 assert len(output_text_basic) > 0
 
                 # Test with stream parameter (original format)
@@ -453,7 +456,8 @@ class TransportTestBase:
                     },
                 )
                 assert result_stream is not None
-                output_text_stream = getattr(result_stream[0], "text")
+                assert not result_stream.is_error
+                output_text_stream = getattr(result_stream.content[0], "text")
                 assert len(output_text_stream) > 0
 
                 # Both should work identically when no new parameters are used
@@ -473,10 +477,10 @@ class TransportTestBase:
             async with client:
                 result = await client.call_tool("fabric_list_models")
                 assert result is not None
-                assert isinstance(result, list)
+                assert not result.is_error
 
-                self._validate_pattern_run_result(result)
-                models_text = getattr(result[0], "text")
+                self._validate_pattern_run_result(result.content)
+                models_text = getattr(result.content[0], "text")
                 assert isinstance(models_text, str)
                 assert len(models_text) > 0
 
@@ -516,9 +520,9 @@ class TransportTestBase:
             async with client:
                 result = await client.call_tool("fabric_list_strategies")
                 assert result is not None
-                assert isinstance(result, list)
+                assert not result.is_error
 
-                strategies_text = getattr(result[0], "text")
+                strategies_text = getattr(result.content[0], "text")
                 assert isinstance(strategies_text, str)
                 assert len(strategies_text) > 0
 
@@ -535,9 +539,9 @@ class TransportTestBase:
             async with client:
                 result = await client.call_tool("fabric_get_configuration")
                 assert result is not None
-                assert isinstance(result, list)
+                assert not result.is_error
 
-                config_text = getattr(result[0], "text")
+                config_text = getattr(result.content[0], "text")
                 assert isinstance(config_text, str)
                 # Should have redacted sensitive values
                 assert "[REDACTED_BY_MCP_SERVER]" in config_text
@@ -571,13 +575,13 @@ class TransportTestBase:
                     task = asyncio.create_task(client.call_tool("fabric_list_patterns"))
                     tasks.append(task)
 
-                results: list[list[Any]] = await asyncio.gather(*tasks)
+                results: list[Any] = await asyncio.gather(*tasks)
 
                 # All requests should succeed
                 for result in results:
                     assert result is not None
-                    assert isinstance(result, list)
-                    assert len(result) > 0
+                    assert not result.is_error
+                    assert len(result.content) > 0
 
     @pytest.mark.asyncio
     async def test_fabric_list_patterns_tool_success(
@@ -600,11 +604,11 @@ class TransportTestBase:
 
                 # Verify response structure
                 assert result is not None
-                assert isinstance(result, list)
-                assert len(result) == 1
+                assert not result.is_error
+                assert len(result.content) == 1
 
                 # Extract the JSON text and parse it
-                patterns_text = getattr(result[0], "text")
+                patterns_text = getattr(result.content[0], "text")
                 assert isinstance(patterns_text, str)
 
                 patterns: list[str] = json.loads(patterns_text)

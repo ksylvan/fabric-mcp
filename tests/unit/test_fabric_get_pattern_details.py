@@ -25,7 +25,8 @@ class TestFabricGetPatternDetails(TestFixturesBase):
         self, server: FabricMCP
     ) -> Callable[[str], dict[str, str]]:
         """Get the fabric_get_pattern_details tool function."""
-        tools = await server.get_tools()
+        tools_list = await server.list_tools()
+        tools = {t.name: t for t in tools_list}
         return getattr(tools["fabric_get_pattern_details"], "fn")
 
     def test_successful_pattern_details_retrieval(

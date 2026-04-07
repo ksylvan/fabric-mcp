@@ -97,8 +97,9 @@ class TestCore(TestFixturesBase):
         # Check that tools are available through the mcp instance
         # Note: The exact way to check registered tools may depend on FastMCP's API
         # This is a basic check to ensure the tools list is populated
-        assert hasattr(server, "get_tools")
-        assert len(await server.get_tools()) == 6
+        assert hasattr(server, "list_tools")
+        tools = await server.list_tools()
+        assert len(tools) == 6
 
     def test_tool_registration_coverage(self, mcp_tools: dict[str, Tool]):
         """Test that all tools are properly registered and accessible."""

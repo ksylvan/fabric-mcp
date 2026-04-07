@@ -29,7 +29,7 @@ class FabricMCP(FastMCP[None], FabricToolsMixin, SSEParserMixin, ValidationMixin
 
     def __init__(self, log_level: str = "INFO"):
         """Initialize the MCP server with a model."""
-        super().__init__(f"Fabric MCP v{__version__}")
+        super().__init__(f"Fabric MCP v{__version__}")  # pyright: ignore[reportUnknownMemberType]
         self.logger = logging.getLogger(__name__)
         self.log_level = log_level
 
