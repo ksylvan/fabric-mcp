@@ -67,7 +67,6 @@ markers = ["integration: marks tests as integration tests"]
 path = "src/fabric_mcp/__about__.py"
 
 [tool.uv]
-prerelease = "if-necessary-or-explicit"
 index = [
     { name = "testpypi", url = "https://test.pypi.org/simple/", publish-url = "https://test.pypi.org/legacy/", explicit = true },
     { name = "pypi", url = "https://pypi.org/simple/", publish-url = "https://upload.pypi.org/legacy/", explicit = true },
