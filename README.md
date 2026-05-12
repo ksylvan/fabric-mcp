@@ -50,12 +50,13 @@ Imagine seamlessly using Fabric's specialized prompts for code explanation, refa
 - **Standardization:** Adhere to the open MCP standard for AI tool integration.
 - **Leverage Fabric Core:** Build upon the existing Fabric CLI and REST API without modifying the core Fabric codebase.
 - **Expose Fabric Functionality:** Provide MCP tools to list patterns, get pattern details, run patterns, list models/strategies, and retrieve configuration.
+- **Expose Pattern Prompts:** Fabric patterns are also exposed as MCP prompts so users can discover and invoke reusable pattern templates directly through prompt-aware clients.
 
 ## How it Works
 
 1. An **MCP Host** (e.g., an IDE extension) connects to this **Fabric MCP Server**.
-2. The Host discovers available tools (like `fabric_run_pattern`) via MCP's `list_tools()` mechanism.
-3. When the user invokes a tool (e.g., asking the IDE's AI assistant to refactor code using a Fabric pattern), the Host sends an MCP request to this server.
+2. The Host discovers available tools (like `fabric_run_pattern`) via MCP's `list_tools()` mechanism and available Fabric pattern templates via MCP's `prompts/list` mechanism.
+3. When the user invokes a tool or prompt (e.g., asking the IDE's AI assistant to refactor code using a Fabric pattern), the Host sends an MCP request to this server.
 4. The **Fabric MCP Server** translates the MCP request into a corresponding REST API call to a running `fabric --serve` instance.
 5. The `fabric --serve` instance executes the pattern.
 6. The **Fabric MCP Server** receives the response (potentially streaming) from Fabric and translates it back into an MCP response for the Host.
