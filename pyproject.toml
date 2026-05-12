@@ -42,7 +42,7 @@ dev = [
     "hatchling>=1.27.0",
     "pre-commit>=4.2.0",
     "pylint>=3.3.7",
-    "pylint-pytest>=1.1.8",
+    "pylint-pytest>=2.0.0a1",
     "pyright>=1.1.402",
     "pytest>=8.4.0",
     "pytest-asyncio>=1.0.0",
@@ -67,6 +67,7 @@ markers = ["integration: marks tests as integration tests"]
 path = "src/fabric_mcp/__about__.py"
 
 [tool.uv]
+prerelease = "if-necessary-or-explicit"
 index = [
     { name = "testpypi", url = "https://test.pypi.org/simple/", publish-url = "https://test.pypi.org/legacy/", explicit = true },
     { name = "pypi", url = "https://pypi.org/simple/", publish-url = "https://upload.pypi.org/legacy/", explicit = true },
