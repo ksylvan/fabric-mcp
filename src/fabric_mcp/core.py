@@ -14,6 +14,7 @@ from . import __version__
 from .api_client import FabricApiClient  # Re-export for test compatibility
 from .config import get_default_model
 from .constants import DEFAULT_MCP_HTTP_PATH, DEFAULT_MODEL, DEFAULT_VENDOR
+from .fabric_prompts import FabricPatternPromptProvider
 from .fabric_tools import FabricToolsMixin
 from .models import PatternExecutionConfig
 from .sse_parser import SSEParserMixin
@@ -37,6 +38,9 @@ class FabricMCP(FastMCP[None], FabricToolsMixin, SSEParserMixin, ValidationMixin
         self._default_model: str | None = None
         self._default_vendor: str | None = None
         self._load_default_config()
+
+        # Expose Fabric patterns as MCP prompt templates.
+        self.add_provider(FabricPatternPromptProvider(self))
 
         # Explicitly register tool methods
         for fn in (
