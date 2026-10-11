@@ -13,7 +13,7 @@ from mcp.types import INTERNAL_ERROR, INVALID_PARAMS
 from . import __version__
 from .api_client import FabricApiClient  # Re-export for test compatibility
 from .config import get_default_model
-from .constants import DEFAULT_MCP_HTTP_PATH, DEFAULT_MODEL, DEFAULT_VENDOR
+from .constants import DEFAULT_MCP_HTTP_PATH
 from .fabric_prompts import FabricPatternPromptProvider
 from .fabric_tools import FabricToolsMixin
 from .models import PatternExecutionConfig
@@ -84,31 +84,23 @@ class FabricMCP(FastMCP[None], FabricToolsMixin, SSEParserMixin, ValidationMixin
         except (OSError, ValueError, TypeError) as e:
             self.logger.warning(
                 "Failed to load default model configuration: %s. "
-                "Pattern execution will use hardcoded defaults.",
+                "Pattern execution will use the Fabric server defaults.",
                 e,
             )
 
     def get_vendor_and_model(self, config: PatternExecutionConfig) -> tuple[str, str]:
-        """Get the vendor and model based on the provided configuration."""
-        vendor_name = config.vendor_name or self._default_vendor
-        if not vendor_name:
-            logger = logging.getLogger(__name__)
-            logger.debug(
-                "Vendor name is None or empty. Set to hardcoded default vendor: %s",
-                DEFAULT_VENDOR,
-            )
-            vendor_name = DEFAULT_VENDOR
+        """Get the vendor and model to send to the Fabric API.
 
-        model_name = config.model_name or self._default_model
-        if not model_name:
-            logger = logging.getLogger(__name__)
-            logger.debug(
-                "Model name is None or empty. Set to hardcoded default model: %s",
-                DEFAULT_MODEL,
-            )
-            model_name = DEFAULT_MODEL
-
-        return vendor_name, model_name
+        If the caller gives a model or a vendor, use only the values from the
+        caller. Do not mix them with the defaults: a default vendor with a
+        different model causes "model X not available for vendor Y". If the
+        caller gives neither, use the defaults from the Fabric .env file. An
+        empty string tells the Fabric server to use its own defaults and to
+        find the vendor from the model name.
+        """
+        if config.vendor_name or config.model_name:
+            return config.vendor_name or "", config.model_name or ""
+        return self._default_vendor or "", self._default_model or ""
 
     def _execute_fabric_pattern(
         self,

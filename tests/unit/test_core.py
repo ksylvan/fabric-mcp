@@ -372,7 +372,7 @@ class TestCore(TestFixturesBase):
 
                 mock_logger.warning.assert_called_with(
                     "Failed to load default model configuration: %s. "
-                    "Pattern execution will use hardcoded defaults.",
+                    "Pattern execution will use the Fabric server defaults.",
                     error,
                 )
             # Verify server still initializes with None defaults

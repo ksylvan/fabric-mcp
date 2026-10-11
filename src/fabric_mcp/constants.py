@@ -2,9 +2,6 @@
 
 DEFAULT_MCP_HTTP_PATH = "/message"
 
-DEFAULT_VENDOR = "openai"
-DEFAULT_MODEL = "gpt-4o"  # Default model if none specified in config
-
 # Sensitive configuration key patterns for redaction
 SENSITIVE_CONFIG_PATTERNS = ["*_API_KEY", "*_TOKEN", "*_SECRET", "*_PASSWORD"]
 
