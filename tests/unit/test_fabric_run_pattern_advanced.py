@@ -14,7 +14,6 @@ import pytest_asyncio
 from mcp import McpError
 from mcp.types import INTERNAL_ERROR, INVALID_PARAMS
 
-from fabric_mcp.constants import DEFAULT_MODEL, DEFAULT_VENDOR
 from fabric_mcp.core import FabricMCP
 from fabric_mcp.models import PatternExecutionConfig
 from tests.shared.fabric_api_mocks import (
@@ -226,10 +225,10 @@ class TestFabricRunPatternModelInference(TestFabricRunPatternFixtureBase):
                 )
                 assert result["output_text"] == "Inference test"
 
-    def test_hardcoded_model_fallback_when_no_defaults(
+    def test_empty_model_and_vendor_when_no_defaults(
         self, fabric_run_pattern_tool_no_defaults: Callable[..., Any]
     ) -> None:
-        """Test fallback to hardcoded default model when no environment defaults."""
+        """Test that empty values go to Fabric, so Fabric uses its own defaults."""
         builder = FabricApiMockBuilder().with_successful_sse("Hello, World!")
 
         # Mock get_default_model to return None for both model and vendor
@@ -239,12 +238,11 @@ class TestFabricRunPatternModelInference(TestFabricRunPatternFixtureBase):
             )
 
             assert isinstance(result, dict)
-            # Check that API was called (would use hardcoded defaults)
             mock_api_client.post.assert_called_once()
             call_args = mock_api_client.post.call_args
             payload = call_args[1]["json_data"]
-            assert payload["prompts"][0]["model"] == DEFAULT_MODEL
-            assert payload["prompts"][0]["vendor"] == DEFAULT_VENDOR
+            assert payload["prompts"][0]["model"] == ""
+            assert payload["prompts"][0]["vendor"] == ""
 
     def test_vendor_inference_for_claude_models(
         self, fabric_run_pattern_tool_claude: Callable[..., Any]
@@ -258,12 +256,12 @@ class TestFabricRunPatternModelInference(TestFabricRunPatternFixtureBase):
             )
 
             assert isinstance(result, dict)
-            # Check that vendor was inferred as "anthropic" for Claude models
+            # Fabric finds the vendor from the model name
             mock_api_client.post.assert_called_once()
             call_args = mock_api_client.post.call_args
             payload = call_args[1]["json_data"]
             assert payload["prompts"][0]["model"] == "claude-3-opus"
-            assert payload["prompts"][0]["vendor"] == DEFAULT_VENDOR
+            assert payload["prompts"][0]["vendor"] == ""
 
     def test_vendor_inference_for_gpt_models(
         self, fabric_run_pattern_tool_gpt: Callable[..., Any]
@@ -277,12 +275,32 @@ class TestFabricRunPatternModelInference(TestFabricRunPatternFixtureBase):
             )
 
             assert isinstance(result, dict)
-            # Check that vendor was inferred as "openai" for GPT models
+            # Fabric finds the vendor from the model name
             mock_api_client.post.assert_called_once()
             call_args = mock_api_client.post.call_args
             payload = call_args[1]["json_data"]
             assert payload["prompts"][0]["model"] == "gpt-3.5-turbo"
-            assert payload["prompts"][0]["vendor"] == DEFAULT_VENDOR
+            assert payload["prompts"][0]["vendor"] == ""
+
+    def test_caller_model_not_mixed_with_default_vendor(self) -> None:
+        """Test that a caller model does not get the default vendor (issue #51)."""
+        with patch(
+            "fabric_mcp.core.get_default_model", return_value=("gpt-4.1", "openai")
+        ):
+            server = FabricMCP()
+        assert server.get_vendor_and_model(
+            PatternExecutionConfig(model_name="claude-3-opus")
+        ) == ("", "claude-3-opus")
+        # Vendor only: use the default model only if the vendor is the same
+        assert server.get_vendor_and_model(
+            PatternExecutionConfig(vendor_name="OpenAI")
+        ) == ("OpenAI", "gpt-4.1")
+        with pytest.raises(ValueError, match="model_name is required"):
+            server.get_vendor_and_model(PatternExecutionConfig(vendor_name="anthropic"))
+        assert server.get_vendor_and_model(PatternExecutionConfig()) == (
+            "openai",
+            "gpt-4.1",
+        )
 
 
 class TestFabricRunPatternVariablesAndAttachments(TestFabricRunPatternFixtureBase):
