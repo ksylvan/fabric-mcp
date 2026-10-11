@@ -97,9 +97,25 @@ class FabricMCP(FastMCP[None], FabricToolsMixin, SSEParserMixin, ValidationMixin
         caller gives neither, use the defaults from the Fabric .env file. An
         empty string tells the Fabric server to use its own defaults and to
         find the vendor from the model name.
+
+        If the caller gives only a vendor, Fabric uses its default model with
+        that vendor. Thus use the default model only if the default vendor is
+        the same. Otherwise, the caller must give a model.
         """
-        if config.vendor_name or config.model_name:
-            return config.vendor_name or "", config.model_name or ""
+        vendor, model = config.vendor_name, config.model_name
+        if vendor and not model:
+            if (
+                self._default_model
+                and self._default_vendor
+                and vendor.casefold() == self._default_vendor.casefold()
+            ):
+                return vendor, self._default_model
+            raise ValueError(
+                f"model_name is required when vendor_name '{vendor}' is given. "
+                "Use fabric_list_models to find the models for this vendor."
+            )
+        if model:
+            return vendor or "", model
         return self._default_vendor or "", self._default_model or ""
 
     def _execute_fabric_pattern(

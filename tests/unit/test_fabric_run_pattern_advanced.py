@@ -291,9 +291,12 @@ class TestFabricRunPatternModelInference(TestFabricRunPatternFixtureBase):
         assert server.get_vendor_and_model(
             PatternExecutionConfig(model_name="claude-3-opus")
         ) == ("", "claude-3-opus")
+        # Vendor only: use the default model only if the vendor is the same
         assert server.get_vendor_and_model(
-            PatternExecutionConfig(vendor_name="anthropic")
-        ) == ("anthropic", "")
+            PatternExecutionConfig(vendor_name="OpenAI")
+        ) == ("OpenAI", "gpt-4.1")
+        with pytest.raises(ValueError, match="model_name is required"):
+            server.get_vendor_and_model(PatternExecutionConfig(vendor_name="anthropic"))
         assert server.get_vendor_and_model(PatternExecutionConfig()) == (
             "openai",
             "gpt-4.1",
