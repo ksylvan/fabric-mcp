@@ -2,8 +2,8 @@
 
 [![License: MIT][mit_license]][mit_license_link]
 [![image](https://img.shields.io/pypi/v/fabric-mcp.svg)](https://pypi.python.org/pypi/fabric-mcp)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ksylvan/fabric-mcp)
-[![Verified on MseeP](https://mseep.ai/badge.svg)](https://mseep.ai/app/fca21713-c65c-42ee-b8fa-ce209466e70a)
+[![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-blue)](https://deepwiki.com/ksylvan/fabric-mcp)
+[![Verified on MseeP](https://img.shields.io/badge/MseeP-verified-green)](https://mseep.ai/app/ksylvan-fabric-mcp)
 
 | main  |   |  | develop  |   |
 |:---:|:---:|:---:|:---:|:---:|
@@ -69,7 +69,7 @@ The project was completed by using the [BMAD-METHOD (Breakthrough Method of Agil
 
 The core architecture and proposed tools are outlined in the [High-Level Architecture Document][architecture_doc].
 
-You can also use [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ksylvan/fabric-mcp) to explore the source code.
+You can also use [![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-blue)](https://deepwiki.com/ksylvan/fabric-mcp) to explore the source code.
 
 ## Getting Started
 
